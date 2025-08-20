@@ -3,6 +3,11 @@ export interface Hospital {
   id: number;
   name: string;
   location: string;
+  description: string;
+  contact: string;
+  website: string;
+  specialties: string[];
+  imageUrl: string;
 }
 
 export interface Doctor {

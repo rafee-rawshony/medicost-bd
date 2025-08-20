@@ -1,4 +1,3 @@
-
 import React from 'react';
 import type { Doctor } from '../types';
 import DoctorCard from './DoctorCard';
@@ -19,15 +18,17 @@ const DoctorList: React.FC<DoctorListProps> = ({ doctors, selectedDoctor, onSele
   }
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {doctors.map((doctor) => (
-        <DoctorCard
-          key={doctor.id}
-          doctor={doctor}
-          isSelected={selectedDoctor?.id === doctor.id}
-          onSelect={onSelectDoctor}
-        />
-      ))}
+    <div className="bg-gray-100 rounded-xl shadow-lg p-4 md:p-6 max-h-[600px] overflow-y-auto custom-scrollbar">
+      <div className="space-y-3">
+        {doctors.map((doctor) => (
+          <DoctorCard
+            key={doctor.id}
+            doctor={doctor}
+            isSelected={selectedDoctor?.id === doctor.id}
+            onSelect={onSelectDoctor}
+          />
+        ))}
+      </div>
     </div>
   );
 };

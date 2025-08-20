@@ -1,4 +1,3 @@
-
 import React from 'react';
 import type { Doctor } from '../types';
 
@@ -9,23 +8,33 @@ interface DoctorCardProps {
 }
 
 const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, isSelected, onSelect }) => {
-  const baseClasses = "bg-white rounded-xl shadow-md p-5 border-2 cursor-pointer transition-all duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-xl";
-  const selectedClasses = "border-primary ring-2 ring-primary-light";
-  const unselectedClasses = "border-transparent hover:border-primary-light";
+  // baseClasses ensures consistent structure, size, and border width to prevent layout shifts.
+  const baseClasses = "flex justify-between items-center w-full rounded-lg p-4 cursor-pointer transition-all duration-200 border-2 min-h-[120px]";
+
+  // stateClasses defines the visual appearance for selected and unselected states.
+  const stateClasses = isSelected
+    ? "bg-primary-light/30 border-primary shadow-md"
+    : "bg-white border-gray-200 hover:border-secondary hover:shadow-sm";
 
   return (
-    <div className={`${baseClasses} ${isSelected ? selectedClasses : unselectedClasses}`} onClick={() => onSelect(doctor)}>
-      <div className="flex flex-col h-full">
-        <h3 className="text-xl font-bold text-primary-dark">{doctor.name}</h3>
-        <p className="text-sm text-gray-500 mb-2">{doctor.title}</p>
-        <div className="my-3">
-          <span className="inline-block bg-secondary-light text-secondary-dark text-sm font-semibold mr-2 px-2.5 py-0.5 rounded-full">
-            {doctor.specialization}
-          </span>
-        </div>
-        <div className="mt-auto pt-3 text-right">
-          <p className="text-lg font-semibold text-gray-800">Fee: <span className="text-secondary text-xl">৳ {doctor.fee.toLocaleString('en-IN')}</span></p>
-        </div>
+    <div 
+      className={`${baseClasses} ${stateClasses}`}
+      onClick={() => onSelect(doctor)}
+      role="button"
+      aria-pressed={isSelected}
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelect(doctor); }}
+    >
+      <div>
+        <h3 className="text-lg font-bold text-primary-dark">{doctor.name}</h3>
+        <p className="text-sm text-gray-500 mb-1">{doctor.title}</p>
+        <span className="inline-block bg-secondary/20 text-secondary-dark text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">
+          {doctor.specialization}
+        </span>
+      </div>
+      <div className="text-right pl-4 flex-shrink-0">
+        <p className="text-md font-semibold text-gray-700">Fee</p>
+        <p className="text-secondary-dark text-xl font-bold">৳ {doctor.fee.toLocaleString('en-IN')}</p>
       </div>
     </div>
   );

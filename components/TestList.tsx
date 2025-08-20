@@ -18,7 +18,7 @@ const TestList: React.FC<TestListProps> = ({ tests, selectedTests, onToggleTest 
   }
   
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 max-h-[600px] overflow-y-auto custom-scrollbar">
+    <div className="bg-white rounded-xl shadow-lg p-4 max-h-[600px] overflow-y-auto custom-scrollbar">
       <div className="space-y-3">
         {tests.map((test) => (
           <TestItem

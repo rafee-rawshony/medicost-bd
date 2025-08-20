@@ -21,6 +21,21 @@
       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #3b82f6; /* secondary-DEFAULT */
       }
+
+      .custom-scrollbar-x::-webkit-scrollbar {
+        height: 8px;
+      }
+      .custom-scrollbar-x::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+      .custom-scrollbar-x::-webkit-scrollbar-thumb {
+        background: #dbeafe; /* secondary-light */
+        border-radius: 10px;
+      }
+      .custom-scrollbar-x::-webkit-scrollbar-thumb:hover {
+        background: #3b82f6; /* secondary-DEFAULT */
+      }
     </style>
     <script>
       tailwind.config = {
@@ -47,7 +62,9 @@
   "imports": {
     "react": "https://esm.sh/react@^19.1.1",
     "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
-    "react/": "https://esm.sh/react@^19.1.1/"
+    "react/": "https://esm.sh/react@^19.1.1/",
+    "react-router-dom": "https://esm.sh/react-router-dom@6.25.1",
+    "react-router-dom/": "https://esm.sh/react-router-dom@6.25.1/"
   }
 }
 </script>

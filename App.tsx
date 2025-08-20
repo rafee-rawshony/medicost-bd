@@ -1,6 +1,7 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import HospitalsPage from './pages/HospitalsPage';
 import AboutPage from './pages/AboutPage';
@@ -9,9 +10,9 @@ import AppointmentPage from './pages/AppointmentPage';
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-primary-light/30 font-sans text-gray-800">
+      <div className="min-h-screen bg-primary-light/30 font-sans text-gray-800 flex flex-col">
         <Header />
-        <main>
+        <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/hospitals" element={<HospitalsPage />} />
@@ -25,6 +26,7 @@ const App: React.FC = () => {
             } />
           </Routes>
         </main>
+        <Footer />
       </div>
     </Router>
   );

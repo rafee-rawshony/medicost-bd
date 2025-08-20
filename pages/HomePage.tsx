@@ -1,4 +1,6 @@
+
 import React, { useState, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { hospitals, doctors, tests } from '../data/mockData';
 import type { Hospital, Doctor, Test } from '../types';
 import HospitalSelector from '../components/HospitalSelector';
@@ -7,7 +9,20 @@ import TestList from '../components/TestList';
 import CostCalculator from '../components/CostCalculator';
 
 const HomePage: React.FC = () => {
-  const [selectedHospitalId, setSelectedHospitalId] = useState<number | null>(hospitals[0]?.id ?? null);
+  const [searchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const [selectedHospitalId, setSelectedHospitalId] = useState<number | null>(() => {
+    const hospitalIdFromUrl = searchParams.get('hospitalId');
+    if (hospitalIdFromUrl) {
+      const id = parseInt(hospitalIdFromUrl, 10);
+      if (!isNaN(id) && hospitals.some(h => h.id === id)) {
+        return id;
+      }
+    }
+    return hospitals[0]?.id ?? null;
+  });
+  
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedTests, setSelectedTests] = useState<Test[]>([]);
 
@@ -28,6 +43,15 @@ const HomePage: React.FC = () => {
         : [...prevTests, test]
     );
   }, []);
+
+  const filteredHospitals = useMemo(() => {
+    if (!searchTerm) return hospitals;
+    const lowercasedTerm = searchTerm.toLowerCase();
+    return hospitals.filter(h =>
+      h.name.toLowerCase().includes(lowercasedTerm) ||
+      h.location.toLowerCase().includes(lowercasedTerm)
+    );
+  }, [searchTerm]);
 
   const filteredDoctors = useMemo(() => {
     if (!selectedHospitalId) return [];
@@ -51,9 +75,11 @@ const HomePage: React.FC = () => {
       />
       <div className="mt-8">
         <HospitalSelector
-          hospitals={hospitals}
+          hospitals={filteredHospitals}
           selectedHospitalId={selectedHospitalId}
           onSelectHospital={handleSelectHospital}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
         />
       </div>
 

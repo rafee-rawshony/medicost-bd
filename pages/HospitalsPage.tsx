@@ -1,5 +1,5 @@
-
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { hospitals } from '../data/mockData';
 import type { Hospital } from '../types';
 
@@ -8,21 +8,15 @@ type SortDirection = 'asc' | 'desc';
 
 const HospitalsPage: React.FC = () => {
   const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: SortDirection }>({ key: 'name', direction: 'asc' });
-  const [selectedLocation, setSelectedLocation] = useState<string>('All Locations');
-
-  const locations = useMemo(() => {
-    const uniqueLocations = [...new Set(hospitals.map(h => h.location))];
-    return ['All Locations', ...uniqueLocations];
-  }, []);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const filteredAndSortedHospitals = useMemo(() => {
-    let filteredHospitals = [...hospitals];
+    const filtered = hospitals.filter(h =>
+      h.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      h.location.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-    if (selectedLocation !== 'All Locations') {
-      filteredHospitals = filteredHospitals.filter(h => h.location === selectedLocation);
-    }
-
-    const sorted = filteredHospitals.sort((a, b) => {
+    const sorted = [...filtered].sort((a, b) => {
       if (a[sortConfig.key] < b[sortConfig.key]) {
         return sortConfig.direction === 'asc' ? -1 : 1;
       }
@@ -32,7 +26,7 @@ const HospitalsPage: React.FC = () => {
       return 0;
     });
     return sorted;
-  }, [sortConfig, selectedLocation]);
+  }, [sortConfig, searchTerm]);
 
   const handleSort = (key: SortKey) => {
     setSortConfig(prevConfig => ({
@@ -48,73 +42,65 @@ const HospitalsPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 md:p-6 lg:p-8">
-      <h1 className="text-4xl font-bold text-primary-dark mb-4 text-center">Our Partner Hospitals</h1>
-      <p className="text-lg text-gray-600 text-center mb-8 max-w-2xl mx-auto">
-        Explore our network of trusted hospitals. Use the filters below to find the right one for you.
+      <h1 className="text-3xl sm:text-4xl font-bold text-primary-dark mb-4 text-center">Our Partner Hospitals</h1>
+      <p className="text-md sm:text-lg text-gray-600 text-center mb-8 max-w-2xl mx-auto">
+        Explore our network of trusted hospitals. Click on a card to learn more about their services and specialties.
       </p>
 
-      {/* Controls */}
-      <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mb-8 p-4 bg-white rounded-lg shadow-sm">
-        {/* Sorting Controls */}
-        <div className="flex items-center gap-4">
-          <span className="font-semibold text-gray-700">Sort by:</span>
-          <button
-            onClick={() => handleSort('name')}
-            className={`px-4 py-2 rounded-full font-medium transition-colors duration-200 ${sortConfig.key === 'name' ? 'bg-primary text-white shadow' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-          >
-            Name {getSortIndicator('name')}
-          </button>
-          <button
-            onClick={() => handleSort('location')}
-            className={`px-4 py-2 rounded-full font-medium transition-colors duration-200 ${sortConfig.key === 'location' ? 'bg-primary text-white shadow' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-          >
-            Location {getSortIndicator('location')}
-          </button>
-        </div>
-
-        {/* Location Filter */}
-        <div className="flex items-center gap-4">
-          <label htmlFor="location-filter" className="font-semibold text-gray-700">Location:</label>
-          <select
-            id="location-filter"
-            value={selectedLocation}
-            onChange={(e) => setSelectedLocation(e.target.value)}
-            className="px-4 py-2 rounded-full font-medium bg-gray-200 text-gray-700 border-transparent focus:border-primary focus:ring-primary focus:outline-none transition-colors"
-          >
-            {locations.map(location => (
-              <option key={location} value={location}>{location}</option>
-            ))}
-          </select>
+      {/* Search and Sort Controls */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+        <input
+            type="text"
+            placeholder="Search hospitals..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full sm:w-64 p-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
+            aria-label="Search hospitals"
+        />
+        <div className="flex items-center gap-2">
+            <span className="font-semibold text-gray-700 hidden sm:inline">Sort by:</span>
+            <button
+              onClick={() => handleSort('name')}
+              className={`px-4 py-2 rounded-full font-medium transition-colors duration-200 ${sortConfig.key === 'name' ? 'bg-primary text-white shadow' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+            >
+              Name {getSortIndicator('name')}
+            </button>
+            <button
+              onClick={() => handleSort('location')}
+              className={`px-4 py-2 rounded-full font-medium transition-colors duration-200 ${sortConfig.key === 'location' ? 'bg-primary text-white shadow' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+            >
+              Location {getSortIndicator('location')}
+            </button>
         </div>
       </div>
 
-      {filteredAndSortedHospitals.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredAndSortedHospitals.map(hospital => (
-            <HospitalCard key={hospital.id} hospital={hospital} />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-16">
-            <p className="text-xl text-gray-500">No hospitals found for the selected location.</p>
-        </div>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredAndSortedHospitals.map(hospital => (
+          <Link key={hospital.id} to={`/?hospitalId=${hospital.id}`} className="block h-full">
+            <HospitalCard hospital={hospital} />
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };
 
 
 const HospitalCard: React.FC<{ hospital: Hospital }> = ({ hospital }) => {
+  const websitePreviewUrl = `https://s.wordpress.com/mshots/v1/${encodeURIComponent(hospital.website)}?w=400&h=250`;
+
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 flex flex-col">
-      <iframe
-        src={hospital.website}
-        title={`${hospital.name} Website Preview`}
-        className="w-full h-48 border-none bg-gray-100"
-        sandbox="allow-scripts allow-same-origin"
-        loading="lazy"
-        aria-label={`${hospital.name} website preview`}
-      ></iframe>
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 flex flex-col h-full">
+      <img 
+        src={websitePreviewUrl} 
+        alt={`${hospital.name} website preview`} 
+        className="w-full h-48 object-cover object-top bg-gray-200"
+        onError={(e) => {
+          // In case the screenshot service fails, show a placeholder
+          e.currentTarget.src = `https://via.placeholder.com/400x250.png/14b8a6/ffffff?text=${encodeURIComponent(hospital.name)}`;
+          e.currentTarget.onerror = null;
+        }}
+      />
       <div className="p-6 flex flex-col flex-grow">
         <h2 className="text-2xl font-bold text-secondary-dark mb-2">{hospital.name}</h2>
         <p className="text-gray-600 flex items-center mb-4">

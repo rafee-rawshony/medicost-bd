@@ -1,0 +1,5 @@
+{
+  "name": "MediCost BD",
+  "description": "A hospital budget estimator for patients in Bangladesh. Users can select a hospital, a doctor, and various medical tests to calculate an estimated total cost for their visit.",
+  "requestFramePermissions": []
+}

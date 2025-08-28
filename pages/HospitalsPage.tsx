@@ -1,6 +1,7 @@
+
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { hospitals } from '../data/mockData';
+import { getHospitals } from '../data/adminData';
 import type { Hospital } from '../types';
 
 type SortKey = 'name' | 'location';
@@ -9,6 +10,7 @@ type SortDirection = 'asc' | 'desc';
 const HospitalsPage: React.FC = () => {
   const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: SortDirection }>({ key: 'name', direction: 'asc' });
   const [searchTerm, setSearchTerm] = useState('');
+  const hospitals = getHospitals();
 
   const filteredAndSortedHospitals = useMemo(() => {
     const filtered = hospitals.filter(h =>
@@ -26,7 +28,7 @@ const HospitalsPage: React.FC = () => {
       return 0;
     });
     return sorted;
-  }, [sortConfig, searchTerm]);
+  }, [sortConfig, searchTerm, hospitals]);
 
   const handleSort = (key: SortKey) => {
     setSortConfig(prevConfig => ({
@@ -76,7 +78,7 @@ const HospitalsPage: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredAndSortedHospitals.map(hospital => (
-          <Link key={hospital.id} to={`/?hospitalId=${hospital.id}`} className="block h-full">
+          <Link key={hospital.id} to={`/hospitals/${hospital.id}`} className="block h-full">
             <HospitalCard hospital={hospital} />
           </Link>
         ))}

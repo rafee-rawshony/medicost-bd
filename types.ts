@@ -25,3 +25,13 @@ export interface Test {
   name: string;
   cost: number;
 }
+
+export type UserRole = 'superadmin' | 'admin' | 'hospital';
+
+export interface User {
+  id: number;
+  username: string;
+  password: string; // In a real app, this would be a hash
+  role: UserRole;
+  hospitalId?: number; // Only for 'hospital' role
+}

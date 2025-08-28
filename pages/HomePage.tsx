@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { hospitals, doctors, tests } from '../data/mockData';
+import { getHospitals, getDoctors, getTests } from '../data/adminData';
 import type { Hospital, Doctor, Test } from '../types';
 import HospitalSelector from '../components/HospitalSelector';
 import DoctorList from '../components/DoctorList';
@@ -11,6 +11,11 @@ import CostCalculator from '../components/CostCalculator';
 const HomePage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Get data on each render to reflect potential admin changes
+  const hospitals = getHospitals();
+  const doctors = getDoctors();
+  const tests = getTests();
 
   const [selectedHospitalId, setSelectedHospitalId] = useState<number | null>(() => {
     const hospitalIdFromUrl = searchParams.get('hospitalId');
@@ -25,11 +30,13 @@ const HomePage: React.FC = () => {
   
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedTests, setSelectedTests] = useState<Test[]>([]);
+  const [selectedSpecialization, setSelectedSpecialization] = useState<string>('All');
 
   const handleSelectHospital = useCallback((id: number) => {
     setSelectedHospitalId(id);
     setSelectedDoctor(null);
     setSelectedTests([]);
+    setSelectedSpecialization('All'); // Reset specialization filter on new hospital
   }, []);
 
   const handleSelectDoctor = useCallback((doctor: Doctor) => {
@@ -43,6 +50,11 @@ const HomePage: React.FC = () => {
         : [...prevTests, test]
     );
   }, []);
+  
+  const handleSpecializationChange = useCallback((spec: string) => {
+    setSelectedSpecialization(spec);
+    setSelectedDoctor(null); // Deselect doctor when changing filter
+  }, []);
 
   const filteredHospitals = useMemo(() => {
     if (!searchTerm) return hospitals;
@@ -51,21 +63,35 @@ const HomePage: React.FC = () => {
       h.name.toLowerCase().includes(lowercasedTerm) ||
       h.location.toLowerCase().includes(lowercasedTerm)
     );
-  }, [searchTerm]);
+  }, [searchTerm, hospitals]);
+
+  const availableSpecializations = useMemo(() => {
+    if (!selectedHospitalId) return [];
+    const specializationsForHospital = doctors
+        .filter(d => d.hospitalId === selectedHospitalId)
+        .map(d => d.specialization);
+    // Return a unique, sorted list with 'All' at the beginning
+    // FIX: Replaced Array.from with spread syntax for better type inference to resolve `unknown[]` type error.
+    return ['All', ...[...new Set(specializationsForHospital)].sort()];
+  }, [selectedHospitalId, doctors]);
 
   const filteredDoctors = useMemo(() => {
     if (!selectedHospitalId) return [];
-    return doctors.filter(d => d.hospitalId === selectedHospitalId);
-  }, [selectedHospitalId]);
+    let doctorsForHospital = doctors.filter(d => d.hospitalId === selectedHospitalId);
+    if (selectedSpecialization !== 'All') {
+        doctorsForHospital = doctorsForHospital.filter(d => d.specialization === selectedSpecialization);
+    }
+    return doctorsForHospital;
+  }, [selectedHospitalId, selectedSpecialization, doctors]);
 
   const filteredTests = useMemo(() => {
     if (!selectedHospitalId) return [];
     return tests.filter(t => t.hospitalId === selectedHospitalId);
-  }, [selectedHospitalId]);
+  }, [selectedHospitalId, tests]);
 
   const selectedHospital = useMemo(() => {
     return hospitals.find(h => h.id === selectedHospitalId) || null;
-  }, [selectedHospitalId]);
+  }, [selectedHospitalId, hospitals]);
   
   return (
     <div className="container mx-auto p-4 md:p-6 lg:p-8">
@@ -93,6 +119,9 @@ const HomePage: React.FC = () => {
               doctors={filteredDoctors}
               selectedDoctor={selectedDoctor}
               onSelectDoctor={handleSelectDoctor}
+              specializations={availableSpecializations}
+              selectedSpecialization={selectedSpecialization}
+              onSpecializationChange={handleSpecializationChange}
             />
           </div>
           <div className="mt-8 lg:mt-0">

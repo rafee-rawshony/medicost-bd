@@ -9,11 +9,12 @@ interface DoctorCardProps {
 
 const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, isSelected, onSelect }) => {
   // baseClasses ensures consistent structure, size, and border width to prevent layout shifts.
-  const baseClasses = "flex justify-between items-center w-full rounded-lg p-4 cursor-pointer transition-all duration-200 border-2 min-h-[120px]";
+  const baseClasses = "flex justify-between items-center w-full rounded-lg p-4 cursor-pointer transition-all duration-300 ease-in-out border-2 min-h-[120px]";
 
   // stateClasses defines the visual appearance for selected and unselected states.
+  // The selected state has a more prominent, solid background and border without increasing its size.
   const stateClasses = isSelected
-    ? "bg-primary-light/30 border-primary shadow-md"
+    ? "bg-primary-light border-primary shadow-md"
     : "bg-white border-gray-200 hover:border-secondary hover:shadow-sm";
 
   return (

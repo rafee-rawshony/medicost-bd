@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuthModal } from '../context/AuthModalContext';
 
 const FacebookIcon = () => (
   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -21,6 +23,7 @@ const LinkedInIcon = () => (
 
 
 const Footer: React.FC = () => {
+  const { openLoginModal } = useAuthModal();
   return (
     <footer className="bg-primary-dark text-white">
       <div className="container mx-auto px-4 md:px-6 lg:px-8 py-12">
@@ -50,6 +53,7 @@ const Footer: React.FC = () => {
               <li><Link to="/hospitals" className="text-teal-100 hover:text-white transition-colors duration-200">Hospitals</Link></li>
               <li><Link to="/about" className="text-teal-100 hover:text-white transition-colors duration-200">About</Link></li>
               <li><Link to="/appointment" className="text-teal-100 hover:text-white transition-colors duration-200">Appointment</Link></li>
+              <li><button onClick={openLoginModal} className="text-teal-100 hover:text-white transition-colors duration-200">Admin Panel</button></li>
             </ul>
           </div>
 

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { getLoggedInUser, logout } from '../data/adminData';
@@ -82,6 +83,9 @@ const Header: React.FC = () => {
             <NavLink to="/hospitals" className={({ isActive }) => `${navLinkClasses} ${isActive ? activeNavLinkClasses : ''}`} aria-label="View hospitals">
               Hospitals
             </NavLink>
+            <NavLink to="/compare" className={({ isActive }) => `${navLinkClasses} ${isActive ? activeNavLinkClasses : ''}`} aria-label="Compare costs">
+              Compare
+            </NavLink>
             <NavLink to="/about" className={({ isActive }) => `${navLinkClasses} ${isActive ? activeNavLinkClasses : ''}`} aria-label="About MediCost">
               About
             </NavLink>
@@ -151,6 +155,7 @@ const Header: React.FC = () => {
           <ul className="space-y-2">
             <li><NavLink to="/" end className={({ isActive }) => `${mobileNavLinkClasses} ${isActive ? mobileActiveNavLinkClasses : ''}`}><NavIcon><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h7.5" /></svg></NavIcon>Home</NavLink></li>
             <li><NavLink to="/hospitals" className={({ isActive }) => `${mobileNavLinkClasses} ${isActive ? mobileActiveNavLinkClasses : ''}`}><NavIcon><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21v-1a6 6 0 00-5.176-5.97M15 21h6v-1a6 6 0 00-9-5.197" /></svg></NavIcon>Hospitals</NavLink></li>
+            <li><NavLink to="/compare" className={({ isActive }) => `${mobileNavLinkClasses} ${isActive ? mobileActiveNavLinkClasses : ''}`}><NavIcon><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.036.243c-2.132 0-4.14-.354-6.044-.994m10.5-11.458c-1.218-.34-2.474-.6-3.75-.793l-2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.036.243c-2.132 0-4.14-.354-6.044-.994M5.25 4.97c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.036.243c-2.132 0-4.14-.354-6.044-.994" /></svg></NavIcon>Compare</NavLink></li>
             <li><NavLink to="/about" className={({ isActive }) => `${mobileNavLinkClasses} ${isActive ? mobileActiveNavLinkClasses : ''}`}><NavIcon><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg></NavIcon>About</NavLink></li>
           </ul>
         </nav>

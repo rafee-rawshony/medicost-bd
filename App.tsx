@@ -8,6 +8,7 @@ import HospitalsPage from './pages/HospitalsPage';
 import HospitalDetailPage from './pages/HospitalDetailPage';
 import AboutPage from './pages/AboutPage';
 import AppointmentPage from './pages/AppointmentPage';
+import ComparePage from './pages/ComparePage';
 import SuperAdminLoginPage from './pages/SuperAdminLoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleBasedProtectedRoute from './components/RoleBasedProtectedRoute';
@@ -106,6 +107,7 @@ const PublicSite = () => (
         <Route path="/hospitals/:hospitalId" element={<HospitalDetailPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/appointment" element={<AppointmentPage />} />
+        <Route path="/compare" element={<ComparePage />} />
         <Route path="*" element={
             <div className="text-center container mx-auto p-4 md:p-6 lg:p-8" style={{minHeight: 'calc(100vh - 200px)'}}>
                 <h1 className="text-4xl font-bold text-primary-dark">404 - Page Not Found</h1>
